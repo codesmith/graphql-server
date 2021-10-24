@@ -1,4 +1,13 @@
 const Query = {
+    // ★追加
+    users: async (root, args, { prisma }, info) => {
+        try {
+            return prisma.users();
+        } catch (error) {
+            throw error;
+        }
+    },
+    // ★追加終わり
     posts(parent, args, { db }, info) {
         //クエリを書いた時に引数が「ない」時は模擬データベースの内容を全て表示 
         if (!args.query) {
