@@ -16,6 +16,7 @@ type NodePromise = Promise<Node>;
 export type AtLeastOne<T> = $Shape<T>;
 
 export interface Exists {
+  post(where?: PostWhereInput): Promise<boolean>;
   user(where?: UserWhereInput): Promise<boolean>;
 }
 
@@ -38,6 +39,25 @@ export interface PrismaInterface {
    * Queries
    */
 
+  post: (where: PostWhereUniqueInput) => PostNullablePromise;
+  posts: (args?: {
+    where?: PostWhereInput,
+    orderBy?: PostOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => FragmentableArray<Post>;
+  postsConnection: (args?: {
+    where?: PostWhereInput,
+    orderBy?: PostOrderByInput,
+    skip?: Int,
+    after?: String,
+    before?: String,
+    first?: Int,
+    last?: Int
+  }) => PostConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput,
@@ -63,6 +83,22 @@ export interface PrismaInterface {
    * Mutations
    */
 
+  createPost: (data: PostCreateInput) => PostPromise;
+  updatePost: (args: {
+    data: PostUpdateInput,
+    where: PostWhereUniqueInput
+  }) => PostPromise;
+  updateManyPosts: (args: {
+    data: PostUpdateManyMutationInput,
+    where?: PostWhereInput
+  }) => BatchPayloadPromise;
+  upsertPost: (args: {
+    where: PostWhereUniqueInput,
+    create: PostCreateInput,
+    update: PostUpdateInput
+  }) => PostPromise;
+  deletePost: (where: PostWhereUniqueInput) => PostPromise;
+  deleteManyPosts: (where?: PostWhereInput) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput,
@@ -88,6 +124,9 @@ export interface PrismaInterface {
 }
 
 export interface Subscription {
+  post: (
+    where?: PostSubscriptionWhereInput
+  ) => PostSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -99,12 +138,81 @@ export type ClientConstructor<T> = (options?: BPOType) => T;
  * Types
  */
 
-export type UserOrderByInput = "id_ASC" | "id_DESC" | "name_ASC" | "name_DESC";
+export type PostOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "title_ASC"
+  | "title_DESC"
+  | "author_ASC"
+  | "author_DESC";
+
+export type UserOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "email_ASC"
+  | "email_DESC"
+  | "password_ASC"
+  | "password_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export type UserWhereUniqueInput = {
+export type PostWhereUniqueInput = {
   id?: ID_Input
+};
+
+export type PostWhereInput = {
+  id?: ID_Input,
+  id_not?: ID_Input,
+  id_in?: ID_Input[],
+  id_not_in?: ID_Input[],
+  id_lt?: ID_Input,
+  id_lte?: ID_Input,
+  id_gt?: ID_Input,
+  id_gte?: ID_Input,
+  id_contains?: ID_Input,
+  id_not_contains?: ID_Input,
+  id_starts_with?: ID_Input,
+  id_not_starts_with?: ID_Input,
+  id_ends_with?: ID_Input,
+  id_not_ends_with?: ID_Input,
+  title?: String,
+  title_not?: String,
+  title_in?: String[],
+  title_not_in?: String[],
+  title_lt?: String,
+  title_lte?: String,
+  title_gt?: String,
+  title_gte?: String,
+  title_contains?: String,
+  title_not_contains?: String,
+  title_starts_with?: String,
+  title_not_starts_with?: String,
+  title_ends_with?: String,
+  title_not_ends_with?: String,
+  author?: String,
+  author_not?: String,
+  author_in?: String[],
+  author_not_in?: String[],
+  author_lt?: String,
+  author_lte?: String,
+  author_gt?: String,
+  author_gte?: String,
+  author_contains?: String,
+  author_not_contains?: String,
+  author_starts_with?: String,
+  author_not_starts_with?: String,
+  author_ends_with?: String,
+  author_not_ends_with?: String,
+  AND?: PostWhereInput[],
+  OR?: PostWhereInput[],
+  NOT?: PostWhereInput[]
+};
+
+export type UserWhereUniqueInput = {
+  id?: ID_Input,
+  email?: String
 };
 
 export type UserWhereInput = {
@@ -136,22 +244,83 @@ export type UserWhereInput = {
   name_not_starts_with?: String,
   name_ends_with?: String,
   name_not_ends_with?: String,
+  email?: String,
+  email_not?: String,
+  email_in?: String[],
+  email_not_in?: String[],
+  email_lt?: String,
+  email_lte?: String,
+  email_gt?: String,
+  email_gte?: String,
+  email_contains?: String,
+  email_not_contains?: String,
+  email_starts_with?: String,
+  email_not_starts_with?: String,
+  email_ends_with?: String,
+  email_not_ends_with?: String,
+  password?: String,
+  password_not?: String,
+  password_in?: String[],
+  password_not_in?: String[],
+  password_lt?: String,
+  password_lte?: String,
+  password_gt?: String,
+  password_gte?: String,
+  password_contains?: String,
+  password_not_contains?: String,
+  password_starts_with?: String,
+  password_not_starts_with?: String,
+  password_ends_with?: String,
+  password_not_ends_with?: String,
   AND?: UserWhereInput[],
   OR?: UserWhereInput[],
   NOT?: UserWhereInput[]
 };
 
+export type PostCreateInput = {
+  id?: ID_Input,
+  title: String,
+  author: String
+};
+
+export type PostUpdateInput = {
+  title?: String,
+  author?: String
+};
+
+export type PostUpdateManyMutationInput = {
+  title?: String,
+  author?: String
+};
+
 export type UserCreateInput = {
   id?: ID_Input,
-  name: String
+  name: String,
+  email: String,
+  password: String
 };
 
 export type UserUpdateInput = {
-  name?: String
+  name?: String,
+  email?: String,
+  password?: String
 };
 
 export type UserUpdateManyMutationInput = {
-  name?: String
+  name?: String,
+  email?: String,
+  password?: String
+};
+
+export type PostSubscriptionWhereInput = {
+  mutation_in?: MutationType[],
+  updatedFields_contains?: String,
+  updatedFields_contains_every?: String[],
+  updatedFields_contains_some?: String[],
+  node?: PostWhereInput,
+  AND?: PostSubscriptionWhereInput[],
+  OR?: PostSubscriptionWhereInput[],
+  NOT?: PostSubscriptionWhereInput[]
 };
 
 export type UserSubscriptionWhereInput = {
@@ -169,49 +338,53 @@ export interface NodeNode {
   id: ID_Output;
 }
 
-export interface User {
+export interface Post {
   id: ID_Output;
-  name: String;
+  title: String;
+  author: String;
 }
 
-export interface UserPromise extends Promise<User>, Fragmentable {
+export interface PostPromise extends Promise<Post>, Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
+  title: () => Promise<String>;
+  author: () => Promise<String>;
 }
 
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
+export interface PostSubscription
+  extends Promise<AsyncIterator<Post>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
+  title: () => Promise<AsyncIterator<String>>;
+  author: () => Promise<AsyncIterator<String>>;
 }
 
-export interface UserNullablePromise
-  extends Promise<User | null>,
+export interface PostNullablePromise
+  extends Promise<Post | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
+  title: () => Promise<String>;
+  author: () => Promise<String>;
 }
 
-export interface UserConnection {
+export interface PostConnection {
   pageInfo: PageInfo;
-  edges: UserEdge[];
+  edges: PostEdge[];
 }
 
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
+export interface PostConnectionPromise
+  extends Promise<PostConnection>,
     Fragmentable {
   pageInfo: <T: PageInfoPromise>() => T;
-  edges: <T: FragmentableArray<UserEdge>>() => T;
-  aggregate: <T: AggregateUserPromise>() => T;
+  edges: <T: FragmentableArray<PostEdge>>() => T;
+  aggregate: <T: AggregatePostPromise>() => T;
 }
 
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
+export interface PostConnectionSubscription
+  extends Promise<AsyncIterator<PostConnection>>,
     Fragmentable {
   pageInfo: <T: PageInfoSubscription>() => T;
-  edges: <T: Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T: AggregateUserSubscription>() => T;
+  edges: <T: Promise<AsyncIterator<PostEdgeSubscription>>>() => T;
+  aggregate: <T: AggregatePostSubscription>() => T;
 }
 
 export interface PageInfo {
@@ -235,6 +408,92 @@ export interface PageInfoSubscription
   hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
   startCursor: () => Promise<AsyncIterator<String>>;
   endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface PostEdge {
+  node: Post;
+  cursor: String;
+}
+
+export interface PostEdgePromise extends Promise<PostEdge>, Fragmentable {
+  node: <T: PostPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface PostEdgeSubscription
+  extends Promise<AsyncIterator<PostEdge>>,
+    Fragmentable {
+  node: <T: PostSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregatePost {
+  count: Int;
+}
+
+export interface AggregatePostPromise
+  extends Promise<AggregatePost>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregatePostSubscription
+  extends Promise<AsyncIterator<AggregatePost>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface User {
+  id: ID_Output;
+  name: String;
+  email: String;
+  password: String;
+}
+
+export interface UserPromise extends Promise<User>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+}
+
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
+}
+
+export interface UserNullablePromise
+  extends Promise<User | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T: PageInfoPromise>() => T;
+  edges: <T: FragmentableArray<UserEdge>>() => T;
+  aggregate: <T: AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T: PageInfoSubscription>() => T;
+  edges: <T: Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T: AggregateUserSubscription>() => T;
 }
 
 export interface UserEdge {
@@ -286,6 +545,53 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
+export interface PostSubscriptionPayload {
+  mutation: MutationType;
+  node: Post;
+  updatedFields: String[];
+  previousValues: PostPreviousValues;
+}
+
+export interface PostSubscriptionPayloadPromise
+  extends Promise<PostSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T: PostPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T: PostPreviousValuesPromise>() => T;
+}
+
+export interface PostSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<PostSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T: PostSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T: PostPreviousValuesSubscription>() => T;
+}
+
+export interface PostPreviousValues {
+  id: ID_Output;
+  title: String;
+  author: String;
+}
+
+export interface PostPreviousValuesPromise
+  extends Promise<PostPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  title: () => Promise<String>;
+  author: () => Promise<String>;
+}
+
+export interface PostPreviousValuesSubscription
+  extends Promise<AsyncIterator<PostPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  title: () => Promise<AsyncIterator<String>>;
+  author: () => Promise<AsyncIterator<String>>;
+}
+
 export interface UserSubscriptionPayload {
   mutation: MutationType;
   node: User;
@@ -314,6 +620,8 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   name: String;
+  email: String;
+  password: String;
 }
 
 export interface UserPreviousValuesPromise
@@ -321,6 +629,8 @@ export interface UserPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  email: () => Promise<String>;
+  password: () => Promise<String>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -328,6 +638,8 @@ export interface UserPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  email: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
 }
 
 /*
@@ -360,6 +672,10 @@ export type Long = string;
 export const models: Model[] = [
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "Post",
     embedded: false
   }
 ];
